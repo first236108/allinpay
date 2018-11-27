@@ -113,31 +113,42 @@ Class Client
         $this->timeStr = $timeStr;
     }
 
-    public function request($service, $method, $param)
+    public function request($service, $method, $param, $url = '')
     {
+        $pageAPI = ['setPayPwd', 'updatePayPwd', 'resetPayPwd'];
+
         $request["service"] = $service;
         $request["method"]  = $method;
         $request["param"]   = $param;
-        $strRequest         = json_encode($request);
-        $strRequest         = str_replace("\r\n", "", $strRequest);
-        $req['sysid']       = $this->_sysid;
+
+        $strRequest = json_encode($request, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        //$strRequest = str_replace("\r\n", "", $strRequest);
+
+        $req['sysid'] = $this->_sysid;
         if ($this->privateKey != null && "" != $this->_sysid) {
             $timestamp        = date("Y-m-d H:i:s", time());
             $sign             = $this->sign($this->_sysid, $strRequest, $timestamp);
             $req['sign']      = $sign;
-            $req['timestamp'] = $timestamp;//'2018-10-31 10:40:36';//
+            $req['timestamp'] = $timestamp;
             $req['v']         = $this->version;
         }
         $req['req'] = $strRequest;
-        $result     = $this->request2($req);
+
+        //页面请求方式，需兼容JAVA对参数值urlencode两次
+        if (in_array($method, $pageAPI)) {
+            $req_str = '';
+            foreach ($req as $k => $v) {
+                $req_str .= $k . '=' . urlencode(urlencode($v)) . '&';
+            }
+            return $url . '?' . trim($req_str, '&');
+        }
+//dump($req);die;
+        $result = $this->request2($req);
         return $this->checkResult($result);
     }
 
     private function request2($args)
     {
-        //dump($args);
-        //dump('https://yun.allinpay.com/yungateway/pwd/setPayPwd.html' . '?' . http_build_query($args));
-        //die;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->serverUrl);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);

@@ -64,7 +64,7 @@ class Access
             $service      = $args[0];
             $method       = $args[1];
             $param        = [];
-            $type_except  = ['bizUserId', 'phone', 'verificationCode','bankCardNo','accountSetNo','bizOrderNo'];
+            $type_except  = ['bizUserId', 'phone', 'verificationCode', 'bankCardNo', 'accountSetNo', 'bizOrderNo', 'payerId'];
             $need_encrypt = ['identityNo', 'cardNo'];
             foreach ($args[2] as $key => $value) {
                 if (in_array($key, $type_except))
@@ -73,7 +73,8 @@ class Access
                     $value = (new RSAUtil($this->publicKey, $this->privateKey))->encrypt((string)$value);
                 $param[$key] = $value;
             }
-            $result = $this->client->request($service, $method, $param);
+
+            $result = $this->client->request($service, $method, $param, $args[3] ?? '');
             return $result;
         } catch (\Exception $e) {
             return $e->getMessage();
