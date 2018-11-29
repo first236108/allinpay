@@ -142,7 +142,7 @@ Class Client
             }
             return $url . '?' . trim($req_str, '&');
         }
-//dump($req);die;
+//echo http_build_query($req);die;
         $result = $this->request2($req);
         return $this->checkResult($result);
     }
