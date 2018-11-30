@@ -142,7 +142,6 @@ Class Client
             }
             return $url . '?' . trim($req_str, '&');
         }
-//echo http_build_query($req);die;
         $result = $this->request2($req);
         return $this->checkResult($result);
     }
@@ -154,7 +153,7 @@ Class Client
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($args));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($args, null, '&', PHP_QUERY_RFC3986));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_AUTOREFERER, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
