@@ -57,7 +57,7 @@ class RSAUtil
     static function sign($privateKey, $text)
     {
         openssl_sign($text, $sign, $privateKey);
-        openssl_free_key($privateKey);
+        //openssl_free_key($privateKey);
         $sign = base64_encode($sign);
         return $sign;
     }
@@ -72,7 +72,7 @@ class RSAUtil
     static function verify($publicKey, $text, $sign)
     {
         $result = (bool)openssl_verify($text, base64_decode($sign), $publicKey, OPENSSL_ALGO_SHA1);
-        openssl_free_key($publicKey);
+        //openssl_free_key($publicKey);
         return $result;
     }
 

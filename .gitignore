@@ -1,2 +1,4 @@
 /src/*.pfx
 /src/*.pem
+/src/config.php
+.idea

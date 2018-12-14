@@ -115,7 +115,7 @@ Class Client
 
     public function request($service, $method, $param, $url = '')
     {
-        $pageAPI = ['setPayPwd', 'updatePayPwd', 'resetPayPwd'];
+        $pageAPI = ['setPayPwd', 'updatePayPwd', 'resetPayPwd', 'pay'];
 
         $request["service"] = $service;
         $request["method"]  = $method;
@@ -139,6 +139,7 @@ Class Client
             $req_str = '';
             foreach ($req as $k => $v) {
                 $req_str .= $k . '=' . urlencode(urlencode($v)) . '&';
+                //$req_str .= $k . '=' . urlencode($v) . '&';
             }
             return $url . '?' . trim($req_str, '&');
         }
@@ -148,6 +149,8 @@ Class Client
 
     private function request2($args)
     {
+        //dump(http_build_query($args, null, '&', PHP_QUERY_RFC3986));
+        //die;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->serverUrl);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
